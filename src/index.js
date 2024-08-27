@@ -1,14 +1,13 @@
 import Phaser from 'phaser';
 
 const config = {
+  // WebGL
   type: Phaser.AUTO,
   width: 800,
   height: 600,
   physics: {
+    // Arcade physics plugin, manages physics
     default: 'arcade',
-    arcade: {
-      gravity: { y: 200 },
-    },
   },
   scene: {
     preload: preload,
@@ -16,12 +15,16 @@ const config = {
   },
 };
 
-new Phaser.Game(config);
-
+// Loading assets
 function preload() {
+  // 'this' context - scene
+  // contains functions and properties we can use
   this.load.image('sky', 'assets/sky.png');
 }
 
+// Creating instances of objects
 function create() {
-  this.add.image(400, 300, 'sky');
+  this.add.image(config.width / 2, config.height / 2, 'sky');
 }
+
+new Phaser.Game(config);

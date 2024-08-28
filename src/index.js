@@ -31,7 +31,12 @@ function preload() {
 const VELOCITY = 200;
 
 let bird;
-let pipes = [];
+let lowerPipe;
+let upperPipe;
+
+const pipeVerticalDistanceRange = [150, 250];
+let pipeVerticalDistance = Phaser.Math.Between(...pipeVerticalDistanceRange);
+
 const flapVelocity = 250;
 const initialBirdPos = { x: config.width * 0.1, y: config.height / 2 };
 
@@ -47,15 +52,13 @@ function create() {
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
 
-  pipes.push(
-    this.add.sprite(config.width * 0.8, config.height / 2, 'pipe').setOrigin(0)
-  );
+  upperPipe = this.physics.add
+    .sprite(config.width * 0.8, config.height / 2, 'pipe')
+    .setOrigin(0, 1);
 
-  pipes.push(
-    this.add
-      .sprite(config.width * 0.8, pipes[0].y - 100, 'pipe')
-      .setOrigin(0, 1)
-  );
+  lowerPipe = this.physics.add
+    .sprite(upperPipe.x, upperPipe.y + pipeVerticalDistance, 'pipe')
+    .setOrigin(0);
 }
 
 // it gets around 60 FPS, every 16 millisecond

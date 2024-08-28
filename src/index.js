@@ -29,13 +29,13 @@ function preload() {
 }
 
 const VELOCITY = 200;
+const PIPES_TO_RENDER = 4;
 
 let bird;
 let lowerPipe;
 let upperPipe;
 
 const pipeVerticalDistanceRange = [150, 250];
-let pipeVerticalDistance = Phaser.Math.Between(...pipeVerticalDistanceRange);
 
 const flapVelocity = 250;
 const initialBirdPos = { x: config.width * 0.1, y: config.height / 2 };
@@ -48,17 +48,30 @@ function create() {
     .sprite(initialBirdPos.x, initialBirdPos.y, 'bird')
     .setOrigin(0);
   bird.body.gravity.y = 400;
+  for (let i = 0; i < PIPES_TO_RENDER; i++) {
+    const pipeVerticalDistance = Phaser.Math.Between(
+      ...pipeVerticalDistanceRange
+    );
+
+    const pipeVerticalPosition = Phaser.Math.Between(
+      20,
+      config.height - 20 - pipeVerticalDistance
+    );
+
+    upperPipe = this.physics.add
+      .sprite(config.width * 0.8 + i * 400, pipeVerticalPosition, 'pipe')
+      .setOrigin(0, 1);
+
+    lowerPipe = this.physics.add
+      .sprite(upperPipe.x, upperPipe.y + pipeVerticalDistance, 'pipe')
+      .setOrigin(0);
+
+    upperPipe.body.velocity.x = -200;
+    lowerPipe.body.velocity.x = -200;
+  }
 
   this.input.on('pointerdown', flap);
   this.input.keyboard.on('keydown_SPACE', flap);
-
-  upperPipe = this.physics.add
-    .sprite(config.width * 0.8, config.height / 2, 'pipe')
-    .setOrigin(0, 1);
-
-  lowerPipe = this.physics.add
-    .sprite(upperPipe.x, upperPipe.y + pipeVerticalDistance, 'pipe')
-    .setOrigin(0);
 }
 
 // it gets around 60 FPS, every 16 millisecond

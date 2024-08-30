@@ -9,14 +9,14 @@ class BaseScene extends Phaser.Scene {
 
     this.lineHeight = 0;
     this.fontSize = 32;
-    this.fontOptions = { fontSize: `${this.fontSize}px`, fill: '#CD00FF' };
+    this.fontOptions = { fontSize: `${this.fontSize}px`, fill: '#FFF' };
   }
 
   create() {
     this.add.image(0, 0, 'sky').setOrigin(0);
   }
 
-  createMenu(menu) {
+  createMenu(menu, callback) {
     let lastMenuPositionY = 0;
 
     menu.forEach((menuItem) => {
@@ -25,11 +25,13 @@ class BaseScene extends Phaser.Scene {
         this.screenCenter[1] + this.lineHeight,
       ];
 
-      this.add
+      menuItem.textGO = this.add
         .text(...menuPosition, menuItem.text, this.fontOptions)
         .setOrigin(0.5, 1);
 
       this.lineHeight += 42;
+
+      callback(menuItem);
     });
   }
 }

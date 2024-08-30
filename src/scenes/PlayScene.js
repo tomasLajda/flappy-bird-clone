@@ -13,16 +13,31 @@ class PlayScene extends BaseScene {
     this.isPaused;
 
     this.pipeHorizontalDistance = 0;
-    this.pipeVerticalDistanceRange = [150, 250];
-    this.pipeHorizontalDistanceRange = [350, 450];
 
     this.flapVelocity = 300;
 
     this.score = 0;
     this.scoreText = '';
+
+    this.currentDifficulty = '';
+    this.difficulties = {
+      easy: {
+        pipeHorizontalDistanceRange: [300, 350],
+        pipeVerticalDistanceRange: [150, 200],
+      },
+      normal: {
+        pipeHorizontalDistanceRange: [280, 330],
+        pipeVerticalDistanceRange: [120, 180],
+      },
+      hard: {
+        pipeHorizontalDistanceRange: [250, 310],
+        pipeVerticalDistanceRange: [60, 120],
+      },
+    };
   }
 
   create() {
+    this.currentDifficulty = 'easy';
     super.create();
 
     this.createBird();
@@ -152,10 +167,13 @@ class PlayScene extends BaseScene {
   }
 
   placePipe(upperPipe, lowerPipe) {
+    const difficulty = this.difficulties[this.currentDifficulty];
+    console.log(difficulty);
+
     const rightMostX = this.getRightMostPipe();
 
     const pipeVerticalDistance = Phaser.Math.Between(
-      ...this.pipeVerticalDistanceRange
+      ...difficulty.pipeVerticalDistanceRange
     );
 
     const pipeVerticalPosition = Phaser.Math.Between(
@@ -164,7 +182,7 @@ class PlayScene extends BaseScene {
     );
 
     const pipeHorizontalDistance = Phaser.Math.Between(
-      ...this.pipeHorizontalDistanceRange
+      ...difficulty.pipeHorizontalDistanceRange
     );
 
     upperPipe.x = rightMostX + pipeHorizontalDistance;
@@ -184,6 +202,7 @@ class PlayScene extends BaseScene {
           this.placePipe(...tempPipes);
           this.increaseScore();
           this.saveBestScore();
+          this.checkForDifficulty();
         }
       }
     });
@@ -232,6 +251,16 @@ class PlayScene extends BaseScene {
   increaseScore() {
     this.score++;
     this.scoreText.setText(`Score: ${this.score}`);
+  }
+
+  checkForDifficulty() {
+    if (this.score === 15) {
+      this.currentDifficulty = 'normal';
+    }
+
+    if (this.score === 30) {
+      this.currentDifficulty = 'hard';
+    }
   }
 }
 

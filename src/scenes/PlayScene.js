@@ -48,6 +48,16 @@ class PlayScene extends BaseScene {
 
     this.handleInputs();
     this.listenToEvents();
+
+    this.anims.create({
+      key: 'fly',
+      frames: this.anims.generateFrameNumbers('bird', { start: 8, end: 15 }),
+      frameRate: 8,
+      // repeat infinitely
+      repeat: -1,
+    });
+
+    this.bird.play('fly');
   }
 
   update() {
@@ -170,7 +180,6 @@ class PlayScene extends BaseScene {
 
   placePipe(upperPipe, lowerPipe) {
     const difficulty = this.difficulties[this.currentDifficulty];
-    console.log(difficulty);
 
     const rightMostX = this.getRightMostPipe();
 

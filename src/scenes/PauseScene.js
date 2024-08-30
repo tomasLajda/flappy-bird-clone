@@ -33,7 +33,6 @@ class PauseScene extends BaseScene {
       if (menuItem.scene && menuItem.text === 'Continue') {
         this.scene.stop();
         this.scene.resume(menuItem.scene);
-        this.physics.resume();
       } else {
         this.scene.stop('PlayScene');
         this.scene.start(menuItem.scene);
